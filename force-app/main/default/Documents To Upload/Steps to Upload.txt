@@ -1,0 +1,5 @@
+Steps To upload:
+Upload these 3 Files in the name of same name in static resources
+
+Ex:
+bootstrapmincss Name should be same;

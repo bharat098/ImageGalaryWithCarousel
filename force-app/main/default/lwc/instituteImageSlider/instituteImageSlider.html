@@ -1,0 +1,78 @@
+<template>
+    <lightning-card>
+    <div>
+        <lightning-input type="file" label="Choose File" multiple onchange={handleFileChange} accept=".jpg,.jpeg,.png,"></lightning-input>
+        <template if:true={selectedFiles}>
+            <template if:true={showPopup}>
+                <section role="dialog" tabindex="-1" aria-modal="true" class="slds-modal slds-fade-in-open">
+                    <div class="slds-modal__container">
+                        <header class="slds-modal__header">
+                            <h2 class="slds-text-heading_medium">Upload Image(s)</h2>
+                            <button class="slds-button slds-button_icon-inverse slds-modal__close slds-button_icon" title="Close" onclick={closePopup}>
+                                <lightning-icon icon-name="utility:close" alternative-text="Close"></lightning-icon>
+                            </button>
+                        </header>
+                        <div class="slds-modal__content slds-p-around_medium">
+                            <ul>
+                                <template for:each={selectedFiles} for:item="file">
+                                    <li style="padding: 10px;font-size: larger;font-weight: 600" key={file.name}>
+                                        <span class="file-icon" style="margin-right:10px;">
+                                            <!-- Add your icon here, for example using an <img> tag -->
+                                            <lightning-icon icon-name="doctype:image" alternative-text="Image file"></lightning-icon>
+                                        </span>
+                                        {file.name}
+                                        <span style="float: right;
+                                        margin-right: 100px;">
+                                            <lightning-icon icon-name="utility:close" style="cursor: pointer;" variant="error" size="xx-small" alternative-text="Failed" data-file-name={file.name} onclick={removeImage}></lightning-icon>
+                                        </span>
+                                    </li>
+                                    
+                                </template>
+                            </ul>
+                        </div>
+                        <footer class="slds-modal__footer">
+                            <lightning-button label="Upload" variant="brand" onclick={handleUpload}></lightning-button>
+                        </footer>
+                    </div>
+                </section>
+                <div class="slds-backdrop slds-backdrop_open"></div>
+            </template>
+        </template>
+        
+    </div>
+        
+<div class="slds-grid slds-wrap">
+    <template for:each={imageData} for:item="image">
+        <div key={image.imageUrl} class="slds-col slds-size_3-of-12" style="padding: 10px; position: relative;">
+            <div class="slds-file slds-file_card slds-has-title" style="width: 14rem" onclick={handleFileItemClick} data-imagetext={image.imageName} data-imageurl={image.imageUrl}>
+                <figure>
+                    <a class="slds-file__crop slds-file__crop_4-by-3 slds-m-top_x-small">
+                        <img src={image.imageUrl} alt={image.imageName} />
+                    </a>
+                    <figcaption class="slds-file__title slds-file__title_card">
+                        <div class="slds-media slds-media_small slds-media_center">
+                            <lightning-icon icon-name={iconName} alternative-text={image.imageName} title={image.imageName} size="xx-small">
+                                <span class="slds-assistive-text">{image.imageName}.{image.extension}</span>
+                            </lightning-icon>
+                            <div class="slds-media__body slds-var-p-left_xx-small">
+                                <span class="slds-file__text slds-truncate" title={image.imageName}>{image.imageName}.{image.extension}</span>
+                            </div>
+                        </div>
+                    </figcaption>
+                </figure>
+                <div class="slds-is-absolute" style="top: 3px; right: 5px; z-index: 10">
+                    <lightning-button-menu alternative-text="Show File Menu" variant="border-filled" icon-size="xx-small">
+                        <lightning-menu-item value={image.imageUrl} label="Delete" onclick={deleteImage}></lightning-menu-item>
+                    </lightning-button-menu>
+                </div>
+            </div>  
+            </div>
+    </template>
+</div>
+
+<c-image-preview if:true={showPreview} image-name={selectedImageName} image-url={selectedImageUrl} onclose={closePreview}></c-image-preview>
+
+    
+</lightning-card>
+    
+</template>

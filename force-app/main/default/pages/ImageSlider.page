@@ -1,0 +1,57 @@
+<apex:page showHeader="false" controller="InstituteFileController">
+  
+<html lang="en">
+<head>
+  <title>Bootstrap Example</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+       <apex:stylesheet value="{!URLFOR($Resource.bootstrapmincss)}"/>
+            <apex:includeScript value="{!URLFOR($Resource.jquery3_6)}"/>
+            <apex:includeScript value="{!URLFOR($Resource.bootstrapminjs)}"/>
+            <apex:stylesheet value="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css"/>
+    </head>
+<body>
+
+<div class="container" style="width:100%">
+   
+  <div id="myCarousel" class="carousel slide" data-ride="carousel">
+    <!-- Indicators -->
+    <ol class="carousel-indicators">
+      <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+      <apex:variable value="{!0}" var="index"/>
+      <apex:repeat value="{!imageUrlList}" var="image">
+          <li data-target="#myCarousel" data-slide-to="{!index + 1}" />
+          <apex:variable value="{!index + 1}" var="index"/>
+      </apex:repeat>
+    </ol>
+
+    <div class="carousel-inner">
+      <div class="item active">
+        <img src="{!image}" alt="Image" style="width:100% !important;height:390px;"/>
+    </div>
+      <apex:repeat value="{!imageUrlList}" var="image" >
+          <div class="item">
+              <img src="{!image}" alt="Image" style="width:100% !important;height:390px;"/>
+          </div>
+      </apex:repeat>
+    </div>
+
+    
+    <!-- Left control -->
+  <a class="left carousel-control" href="#myCarousel" data-slide="prev">
+    <span class="fa fa-chevron-left" style="margin-top: 70%;"></span>
+  </a>
+
+  <!-- Right control -->
+  <a class="right carousel-control" href="#myCarousel" data-slide="next">
+    <span class="fa fa-chevron-right" style="margin-top: 70%;"></span>
+  </a>
+    
+  </div>
+</div>
+
+</body>
+
+</html>
+
+</apex:page>

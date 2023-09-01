@@ -1,0 +1,18 @@
+<template>
+    <div class="image-preview">
+        <div class="image-preview-header">
+            <span>{imageName}</span>
+            <lightning-button-icon
+                icon-name="utility:close"
+                variant="bare"
+                alternative-text="Close"
+                title="Close"
+                onclick={closePreview}
+            ></lightning-button-icon>
+        </div>
+        <div class="image-preview-content">
+            <img src={imageUrl} alt="Image Preview" />
+        </div>
+    </div>
+    
+</template>

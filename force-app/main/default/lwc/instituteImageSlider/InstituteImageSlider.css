@@ -1,0 +1,11 @@
+.gallery {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: flex-start !important;
+}
+
+.gallery-item {
+    flex-basis: calc(20% - 20px) !important;
+    margin: 10px !important;
+    box-sizing: border-box !important;
+}
