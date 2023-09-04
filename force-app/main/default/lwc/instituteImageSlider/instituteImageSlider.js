@@ -14,16 +14,49 @@ export default class InstituteImageSlider extends LightningElement {
     showPopup=false;
     @track selectedFiles = [];
     imageName;
+    @track uploadProgress = 0;
+    @track isUploaded = false;
+    @track uploadFailed = false;
+    @track NoimageText = false;
+    noOfImages;
+	
+	connectedCallback() {
+        this.loadImages();
+    }
 
+	//Progressbar loading
+    loading() {
+        console.log('loading...');
+        if(this.showPopup==true){
+            this.uploadProgress = 0;
+             this.isUploaded = false;
+              this.uploadFailed = true;// Simulate file upload
+              const uploadInterval = setInterval(() => {
+                if (this.uploadProgress < 100) {
+                    this.uploadProgress += 10;
+                } else {
+                    clearInterval(uploadInterval);
+                    this.uploadFailed = false;
+                    this.isUploaded = true;
+                }
+            }, 500);
+        }
+    }
+	//Handle FileInput change
     handleFileChange(event) {
         this.selectedFiles = event.target.files;
+        this.noOfImages = this.selectedFiles.length;
         console.log('this.selectedFiles',this.selectedFiles);
         if (this.selectedFiles.length > 0) {
             this.showPopup = true;
+            this.loading();
+            this.NoimageText = false;
         } else {
             this.showPopup = false;
         }
+        
     }
+	//Remove Image
     removeImage(event) {
         const fileNameToRemove = event.target.dataset.fileName; 
         let tempDelList = [];
@@ -35,14 +68,21 @@ export default class InstituteImageSlider extends LightningElement {
             }
         }
         this.selectedFiles = tempDelList;
+        this.noOfImages = this.selectedFiles.length;
+        if(this.selectedFiles.length == 0){
+            this.NoimageText = true;
+        }else{
+            this.NoimageText = false;
+        }
        
     }
-    
+	//Close screen
     closePopup(){
+            this.selectedFiles = [];
             this.showPopup=false;
     }
    
-
+	//Upload Files
     handleUpload() {
         for (let i = 0; i < this.selectedFiles.length; i++) {
             const file = this.selectedFiles[i];
@@ -54,7 +94,16 @@ export default class InstituteImageSlider extends LightningElement {
             };
             reader.readAsDataURL(file);
         }
+        if(this.selectedFiles.length == 0){
+            this.dispatchEvent(
+                new ShowToastEvent({
+                    title: 'Error',
+                    message: 'No Files are there',
+                    variant: 'error'
+                })
+            );
         }
+    }
     
 
     uploadAttachment(base64data, fileName) {
@@ -86,10 +135,7 @@ export default class InstituteImageSlider extends LightningElement {
     }
 
     
-    connectedCallback() {
-        this.loadImages();
-    }
-
+    //Load Images for Galary screen
     loadImages() {
         getImageUrls({ parentId: this.recordId })
             .then(result => {
@@ -104,6 +150,7 @@ export default class InstituteImageSlider extends LightningElement {
     closePreview() {
         this.showPreview = false;
     }
+	//Delete images form Galary
     deleteImage(event) {
         const imageId = event.target.value;
         const parts = imageId.split('?file=');
@@ -133,6 +180,8 @@ export default class InstituteImageSlider extends LightningElement {
         }
         
     }
+	
+	//get The icons as Extension
     get iconName() {
         // Update iconName based on the extension
         const extension = this.selectedFiles.Extension;

@@ -1,7 +1,10 @@
 <template>
     <lightning-card>
     <div>
+		<!-- Input File -->
         <lightning-input type="file" label="Choose File" multiple onchange={handleFileChange} accept=".jpg,.jpeg,.png,"></lightning-input>
+		
+		<!-- Modal Popup for Upload screen -->
         <template if:true={selectedFiles}>
             <template if:true={showPopup}>
                 <section role="dialog" tabindex="-1" aria-modal="true" class="slds-modal slds-fade-in-open">
@@ -15,22 +18,42 @@
                         <div class="slds-modal__content slds-p-around_medium">
                             <ul>
                                 <template for:each={selectedFiles} for:item="file">
-                                    <li style="padding: 10px;font-size: larger;font-weight: 600" key={file.name}>
-                                        <span class="file-icon" style="margin-right:10px;">
-                                            <!-- Add your icon here, for example using an <img> tag -->
-                                            <lightning-icon icon-name="doctype:image" alternative-text="Image file"></lightning-icon>
-                                        </span>
-                                        {file.name}
-                                        <span style="float: right;
-                                        margin-right: 100px;">
-                                            <lightning-icon icon-name="utility:close" style="cursor: pointer;" variant="error" size="xx-small" alternative-text="Failed" data-file-name={file.name} onclick={removeImage}></lightning-icon>
-                                        </span>
-                                    </li>
-                                    
+                                    <div key={file.name} class="demo-only slds-size_4-of-4">
+                                        <div style="padding: 2%;" class="slds-media slds-media_responsive">
+                                            <div class="slds-media__figure">
+                                                <span class="slds-avatar slds-avatar_large">
+                                                    <lightning-icon icon-name="doctype:image" alternative-text="Image file"></lightning-icon>
+                                                </span>
+                                            </div>
+                                            <div class="slds-media__body">
+                                                <span>{file.name}</span>
+                                                <div class="slds-grid slds-gutters">
+                                                    <div style="margin-top: 8px;width:80%" class="slds-col slds-size_2-of-3">
+                                                        <span><lightning-progress-bar value={uploadProgress} class="progress"></lightning-progress-bar></span>
+                                                    </div>
+                                                    <div class="slds-col slds-size_1-of-3">
+                                                        <span>
+                                                        <template if:true={isUploaded}>
+                                                            <lightning-icon icon-name="utility:success" variant="success" size="x-small" alternative-text="Uploaded"></lightning-icon>
+                                                        </template>
+                                                        <template if:true={uploadFailed}>
+                                                            <lightning-icon icon-name="utility:close" style="cursor: pointer;" variant="error" size="x-small" alternative-text="Failed" data-file-name={file.name} onclick={removeImage}></lightning-icon>
+                                                        </template>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </template>
+                                <template if:true={NoimageText}>
+                                    <p style="margin-left: 40%;font-weight: 700;color: red;">No Images Found</p>
                                 </template>
                             </ul>
                         </div>
                         <footer class="slds-modal__footer">
+                            <p style="float: left;font-weight: 700;">Showing Images:{noOfImages}</p>
+                            <lightning-button label="Cancel"  onclick={closePopup}></lightning-button>
                             <lightning-button label="Upload" variant="brand" onclick={handleUpload}></lightning-button>
                         </footer>
                     </div>
@@ -40,7 +63,7 @@
         </template>
         
     </div>
-        
+     <!-- Image Galary screen -->   
 <div class="slds-grid slds-wrap">
     <template for:each={imageData} for:item="image">
         <div key={image.imageUrl} class="slds-col slds-size_3-of-12" style="padding: 10px; position: relative;">
@@ -69,10 +92,13 @@
             </div>
     </template>
 </div>
-
-<c-image-preview if:true={showPreview} image-name={selectedImageName} image-url={selectedImageUrl} onclose={closePreview}></c-image-preview>
-
-    
+<!-- Preview screen -->
+<template if:true={showPreview}>
+    <div class="slds-backdrop slds-backdrop_open"></div>
+</template>
+<div if:true={showPreview} class="slds-modal slds-fade-in-open">
+    <c-image-preview image-name={selectedImageName} image-url={selectedImageUrl} onclose={closePreview}></c-image-preview>
+</div> 
 </lightning-card>
     
 </template>
